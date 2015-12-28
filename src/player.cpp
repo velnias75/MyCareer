@@ -26,14 +26,15 @@
 using namespace Model;
 
 Player::Player(QObject *parent) : QObject(parent),
-    m_interestRate(1.0 + (2.0/((qrand() % 1000) + 1))), m_money(2000.0),
+    m_interestRate(1.0 + (2.0/((qrand() % 1000) + 1))),
+    m_inflation(1.0 + (1.0/(1 + (qrand() % 5000)))), m_money(500.0),
     m_job(JobRegistry::instance().createNullJob()), m_expenses(10.0), m_health(), m_age(),
-    m_education(EducationRegistry::instance(*this).createNullEducation()) {
+    m_education(EducationRegistry::instance(*this).createNullEducation()), m_gainedEduLevel(0u) {
 
     QObject::connect(&m_age, SIGNAL(yearsChanged(uint)),
                      this, SLOT(yearsChanged(uint)));
-    QObject::connect(&m_health, SIGNAL(valueChanged(unsigned char)),
-                     this, SLOT(healthValueChanged(unsigned char)));
+    QObject::connect(&m_health, SIGNAL(valueChanged(uchar)),
+                     this, SLOT(healthValueChanged(uchar)));
     QObject::connect(&m_money, SIGNAL(amountChanged(qreal)),
                      this, SLOT(moneyValueChanged(qreal)));
     QObject::connect(&m_expenses, SIGNAL(amountChanged(qreal)),
@@ -61,12 +62,13 @@ void Player::yearsChanged(uint) {
 
     if(!(m_age.days() % 365) && m_job->averageQuality() < 40) {
         setJob(JobRegistry::instance().createNullJob());
+        if(m_money.amount() > 0.0) emit offerHealthCheck(m_money.amount() * 0.8);
     }
 
     emit ageChanged(m_age);
 }
 
-void Player::healthValueChanged(unsigned char) {
+void Player::healthValueChanged(uchar) {
     emit healthChanged(m_health);
 }
 
@@ -86,8 +88,12 @@ void Player::increaseDay() {
     m_age.increaseDay();
 
     if(!(m_age.days() & 63)) m_health.setValue(qMax(0, m_health.value() -
-                                                    (m_money.amount() < 0.0 ? 2 : 1)));
+                                                    (m_money.amount() < 0.0 ? 25 :
+                                                                              m_job->payment().
+                                                                              amount() == 0.0 ?
+                                                                                  10 : 1)));
 
+    m_expenses.setAmount(m_expenses.amount() * m_inflation);
     m_money.setAmount(m_money.amount() + m_job->payment().amount() - m_expenses.amount());
 
     m_job->addQualitySample((m_health.value() * (10 + (qrand() % 90)))/100);
@@ -133,11 +139,24 @@ const IEducation *Player::education() const {
 void Player::setEducation(const IEducation *education) {
 
     m_education = education;
+
     emit educationChanged(m_education);
 
     if(m_education->isInProgress() && !m_education->succeeded()) {
+        m_money.setAmount(m_money.amount() - m_education->cost());
         m_expenses.setAmount(m_expenses.amount() + m_education->extraExpense());
     } else if(m_education->isInProgress()) {
         m_expenses.setAmount(m_expenses.amount() - m_education->extraExpense());
+        m_gainedEduLevel = m_education->level();
+        m_health.setValue(qMin<uchar>(100u, m_health.value() + (10u * m_gainedEduLevel)));
     }
+}
+
+uint Player::gainedEduLevel() const {
+    return m_gainedEduLevel;
+}
+
+void Player::doHealthCheck(qreal cost) {
+    m_money.setAmount(m_money.amount() - cost);
+    m_health.setValue(qMin<uchar>(100u, m_health.value() + (10 + (qrand() % 40))));
 }

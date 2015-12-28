@@ -24,10 +24,11 @@
 using namespace Model;
 
 GenericEducation::GenericEducation(const Money &money, const Age &age, qreal amount,
-                                   qreal extraExpense, ulong days, const QString &name,
+                                   qreal extraExpense, ulong days, const QString &name, uint level,
                                    QObject *parent) : AbstractEducation(money, age, parent),
-    m_amount(amount), m_name(name), m_isInProgress(false), m_days(days), m_succeeded(false),
-    m_extraExpense(extraExpense) {}
+    m_amount(amount), m_name(name), m_isInProgress(false), m_days(days), m_currentDay(0ul),
+    m_targetDay(0ul), m_startDay(0ul), m_succeeded(false), m_extraExpense(extraExpense),
+    m_level(level) {}
 
 QString GenericEducation::name() const {
     return m_name;
@@ -90,4 +91,8 @@ ulong GenericEducation::targetDay() const {
 
 bool GenericEducation::succeeded() const {
     return m_succeeded;
+}
+
+uint GenericEducation::level() const {
+    return m_level;
 }

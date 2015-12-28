@@ -48,6 +48,8 @@ private slots:
     void jobChanged(const Model::IJob *job);
 
     void findJob();
+    void jobFound(Model::IJob *);
+    void healthCheck(qreal);
     void educationAvailable(const Model::IEducation *education);
     void doNextEducation();
     void educationSucceeded(bool);
@@ -65,6 +67,7 @@ private:
     ModelPlayer m_player;
     QTimer *m_daysTimer;
     Model::IEducation * m_nextEducation;
+    bool m_jobSearching;
 };
 
 #endif // MAINWINDOW_H

@@ -70,3 +70,7 @@ ulong NullEducation::targetDay() const {
 bool NullEducation::succeeded() const {
     return true;
 }
+
+uint NullEducation::level() const {
+    return 0u;
+}

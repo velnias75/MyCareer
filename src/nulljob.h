@@ -35,6 +35,7 @@ public:
 public slots:
     virtual QString name() const;
     virtual void addQualitySample(int quality);
+    virtual uint minLevel() const;
 
 private:
     explicit NullJob(QObject *parent = 0L);

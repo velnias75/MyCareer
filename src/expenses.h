@@ -29,7 +29,6 @@ class Expenses : public Money {
 
 public:
     explicit Expenses(float amount, QObject *parent = 0);
-
     Expenses &operator=(const Expenses &o);
 };
 

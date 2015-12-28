@@ -34,6 +34,7 @@ class IEducation : public QObject {
 	Q_PROPERTY(bool succeeded READ succeeded NOTIFY succeededChanged)
 	Q_PROPERTY(qreal cost READ cost)
 	Q_PROPERTY(qreal extraExpense READ extraExpense)
+	Q_PROPERTY(uint level READ level)
 
 public slots:
 	virtual QString name() const = 0;
@@ -45,6 +46,7 @@ public slots:
 	virtual bool succeeded() const = 0;
 	virtual qreal cost() const = 0;
 	virtual qreal extraExpense() const = 0;
+	virtual uint level() const = 0;
 
 signals:
 	void available(const Model::IEducation *);

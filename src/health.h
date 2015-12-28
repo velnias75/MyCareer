@@ -26,7 +26,7 @@ namespace Model {
 
 class Health : public QObject {
     Q_OBJECT
-    Q_PROPERTY(unsigned char value READ value WRITE setValue NOTIFY valueChanged)
+    Q_PROPERTY(uchar value READ value WRITE setValue NOTIFY valueChanged)
 
 public:
     explicit Health(QObject *parent = 0);
@@ -35,14 +35,14 @@ public:
 
 signals:
     void dead();
-    void valueChanged(unsigned char value);
+    void valueChanged(uchar value);
 
 public slots:
-    unsigned char value() const;
-    void setValue(unsigned char value);
+    uchar value() const;
+    void setValue(uchar value);
 
 private:
-    unsigned char m_value;
+    uchar m_value;
 };
 
 }

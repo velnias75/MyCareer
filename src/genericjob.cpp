@@ -21,9 +21,13 @@
 
 using namespace Model;
 
-GenericJob::GenericJob(qreal payment, const QString &name, QObject *parent) :
-    AbstractJob(payment, parent), m_name(name) {}
+GenericJob::GenericJob(qreal payment, const QString &name, uint minLevel, QObject *parent) :
+    AbstractJob(payment, parent), m_name(name), m_minLevel(minLevel) {}
 
 QString GenericJob::name() const {
     return m_name;
+}
+
+uint GenericJob::minLevel() const {
+    return m_minLevel;
 }

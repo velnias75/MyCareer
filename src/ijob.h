@@ -30,11 +30,13 @@ class IJob : public QObject {
 	Q_OBJECT
 	Q_PROPERTY(QString name READ name)
 	Q_PROPERTY(Money payment READ payment)
+	Q_PROPERTY(uint minLevel READ minLevel)
 
 public slots:
 	virtual QString name() const = 0;
 	virtual const Money &payment() const = 0;
 	virtual void addQualitySample(int quality) = 0;
+	virtual uint minLevel() const = 0;
 
 public:
 	virtual int averageQuality() const = 0;

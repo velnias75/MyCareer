@@ -24,8 +24,6 @@ using namespace Model;
 Expenses::Expenses(float amount, QObject *parent) : Money(amount, parent) {}
 
 Expenses &Expenses::operator=(const Expenses &o) {
-
     if(this != &o) {}
-
     return *this;
 }

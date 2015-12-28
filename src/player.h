@@ -33,7 +33,6 @@ class IJob;
 class IEducation;
 
 class Player : public QObject {
-
     Q_OBJECT
     Q_PROPERTY(Money money READ money NOTIFY moneyChanged)
     Q_PROPERTY(IJob* job WRITE setJob READ job NOTIFY jobChanged)
@@ -42,14 +41,19 @@ class Player : public QObject {
     Q_PROPERTY(Age age READ age NOTIFY ageChanged)
     Q_PROPERTY(const IEducation* IEducation WRITE setEducation READ education
                NOTIFY educationChanged)
+    Q_PROPERTY(uint gainedEduLevel READ gainedEduLevel)
 
 public:
     explicit Player(QObject *parent = 0);
 
     Player &operator=(const Player &o);
 
+    void doHealthCheck(qreal cost);
+
 signals:
     void dead();
+    void offerHealthCheck(qreal);
+
     void moneyChanged(const Model::Money &);
     void jobChanged(const Model::IJob *);
     void expensesChanged(const Model::Expenses &);
@@ -64,6 +68,7 @@ public slots:
     const Expenses &expenses() const;
     const Health &health() const;
     const Age &age() const;
+    uint gainedEduLevel() const;
 
     const IEducation *education() const;
     void setEducation(const IEducation *IEducation);
@@ -75,18 +80,20 @@ private slots:
     void die();
 
     void yearsChanged(uint);
-    void healthValueChanged(unsigned char);
+    void healthValueChanged(uchar);
     void moneyValueChanged(qreal money);
     void expensesValueChanged(qreal expenses);
 
 private:
     const qreal m_interestRate;
+    const qreal m_inflation;
     Money m_money;
     IJob *m_job;
     Expenses m_expenses;
     Health m_health;
     Age m_age;
     const IEducation *m_education;
+    uint m_gainedEduLevel;
 };
 
 }

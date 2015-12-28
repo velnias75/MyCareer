@@ -36,17 +36,25 @@ public:
 
     virtual ~JobRegistry();
 
-    IJob *findJob(const Player &player) const;
-
+    uchar findJob(const Player &player) const;
     IJob *createNullJob() const;
+
+signals:
+    void jobFound(Model::IJob *);
+
+private slots:
+    void searchDaysChanged(ulong);
 
 private:
     explicit JobRegistry(QObject *parent = 0);
 
-    IJob *createGenericJob(const QString &name, qreal payment) const;
+    IJob *createGenericJob(const QString &name, qreal payment, uint minLevel) const;
 
 private:
     QList<IJob *> m_jobList;
+    mutable ulong m_searchStartDay;
+    mutable ulong m_searchDuration;
+    mutable uint m_eduLevel;
 };
 
 }

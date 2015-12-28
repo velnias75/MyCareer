@@ -28,9 +28,10 @@ class NullEducation : public AbstractEducation {
     Q_OBJECT
     Q_PROPERTY(QString name READ name)
 
-public slots:
+public:
     static NullEducation &instance();
 
+public slots:
     virtual QString name() const;
     virtual bool isInProgress() const;
     virtual void setInProgress(bool);
@@ -40,6 +41,7 @@ public slots:
     virtual bool succeeded() const;
     virtual qreal cost() const;
     virtual qreal extraExpense() const;
+    virtual uint level() const;
 
 protected slots:
     virtual void ageDaysChanged(ulong days);

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>330</height>
+    <height>365</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -29,6 +29,13 @@
       <layout class="QFormLayout" name="formLayout_2">
        <item row="0" column="0">
         <widget class="QLabel" name="label_2">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Money:</string>
          </property>
@@ -36,47 +43,52 @@
        </item>
        <item row="0" column="1">
         <widget class="QLabel" name="moneyLabel">
-         <property name="text">
-          <string notr="true">TextLabel</string>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
          </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Job:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="jobLabel">
          <property name="text">
           <string notr="true">TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>Expenses:</string>
+          <string>Job:</string>
          </property>
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLabel" name="expensesLabel">
+        <widget class="QLabel" name="jobLabel">
          <property name="text">
           <string notr="true">TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="4" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Expenses:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLabel" name="expensesLabel">
+         <property name="text">
+          <string notr="true">TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
           <string>Education:</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <widget class="QProgressBar" name="eduBar">
          <property name="enabled">
           <bool>false</bool>
@@ -91,6 +103,22 @@
           <string notr="true">%p%</string>
          </property>
         </widget>
+       </item>
+       <item row="2" column="1">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>2</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -147,26 +175,43 @@
     <item>
      <widget class="QGroupBox" name="groupBox_3">
       <property name="title">
-       <string>Actions</string>
+       <string>Choose an action</string>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <property name="spacing">
-        <number>10</number>
-       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QPushButton" name="findJobButton">
-         <property name="text">
-          <string>Find &amp;Job</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="findJobButton">
+           <property name="text">
+            <string>Find &amp;Job</string>
+           </property>
+           <property name="default">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="eduButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string notr="true">Education</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
-        <widget class="QPushButton" name="eduButton">
-         <property name="enabled">
-          <bool>false</bool>
+        <widget class="QProgressBar" name="findJobBar">
+         <property name="maximum">
+          <number>365</number>
          </property>
-         <property name="text">
-          <string notr="true">Education</string>
+         <property name="value">
+          <number>0</number>
+         </property>
+         <property name="format">
+          <string notr="true"/>
          </property>
         </widget>
        </item>

@@ -31,6 +31,7 @@ class GenericEducation : public AbstractEducation {
     Q_PROPERTY(ulong targetDay READ targetDay)
     Q_PROPERTY(qreal cost READ cost)
     Q_PROPERTY(qreal extraExpense READ extraExpense)
+    Q_PROPERTY(uint level READ level)
 
     friend class EducationRegistry;
 
@@ -48,6 +49,7 @@ public slots:
     virtual bool succeeded() const;
     virtual qreal cost() const;
     virtual qreal extraExpense() const;
+    virtual uint level() const;
 
 protected slots:
     virtual void ageDaysChanged(ulong days);
@@ -55,7 +57,7 @@ protected slots:
 protected:
     explicit GenericEducation(const Money &money, const Age &age, qreal amount,
                               qreal extraExpense, ulong days, const QString &name,
-                              QObject *parent = 0);
+                              uint level, QObject *parent = 0);
 
     virtual bool isAvailable(qreal money) const;
 
@@ -63,12 +65,13 @@ private:
     const qreal m_amount;
     const QString m_name;
     bool m_isInProgress;
-    ulong m_days;
-    ulong m_currentDay;
+    const ulong m_days;
+    const ulong m_currentDay;
     ulong m_targetDay;
     ulong m_startDay;
     bool m_succeeded;
-    qreal m_extraExpense;
+    const qreal m_extraExpense;
+    const uint m_level;
 };
 
 }

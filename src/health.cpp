@@ -32,11 +32,11 @@ Health &Health::operator=(const Health &o) {
     return *this;
 }
 
-unsigned char Health::value() const {
+uchar Health::value() const {
     return m_value;
 }
 
-void Health::setValue(unsigned char value) {
+void Health::setValue(uchar value) {
     m_value = value;
     emit valueChanged(m_value);
     if(!m_value) emit dead();

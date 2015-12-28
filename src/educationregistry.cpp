@@ -28,15 +28,17 @@ using namespace Model;
 EducationRegistry::EducationRegistry(const Player &player, QObject *parent) :
     QObject(parent), m_educations(), m_nextEducation(0) {
 
-    m_educations.append(new GenericEducation(player.money(), player.age(), 20000.0,
+    m_educations.append(new GenericEducation(player.money(), player.age(), 2000.0,
                                              1.0/((qrand() % 99) + 1), 730ul,
-                                             "Technical School"));
-    m_educations.append(new GenericEducation(player.money(), player.age(), 1000000.0,
+                                             "Technical School", 1u));
+    m_educations.append(new GenericEducation(player.money(), player.age(), 100000.0,
                                              10.0 + (qrand() % 10), 1460ul,
-                                             "Technical University"));
+                                             "Technical University", 2u));
 }
 
-EducationRegistry::~EducationRegistry() {}
+EducationRegistry::~EducationRegistry() {
+    foreach (const IEducation *e, m_educations) delete e;
+}
 
 EducationRegistry &EducationRegistry::instance(const Player &player) {
     static EducationRegistry inst(player);

@@ -19,6 +19,7 @@
 
 #include <QTimer>
 #include <QMessageBox>
+#include <QDesktopWidget>
 
 #include "ijob.h"
 #include "mainwindow.h"
@@ -27,7 +28,8 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), m_player(),
     m_daysTimer(new QTimer(this)),
-    m_nextEducation(Model::EducationRegistry::instance(m_player).createNullEducation()) {
+    m_nextEducation(Model::EducationRegistry::instance(m_player).createNullEducation()),
+    m_jobSearching(false) {
 
     setupUi(this);
 
@@ -51,12 +53,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), m_player(),
                      this, SLOT(ageChanged(Model::Age)));
     QObject::connect(&m_player, SIGNAL(jobChanged(const Model::IJob *)),
                      this, SLOT(jobChanged(const Model::IJob *)));
+    QObject::connect(&m_player, SIGNAL(offerHealthCheck(qreal)),
+                     this, SLOT(healthCheck(qreal)));
 
     expensesChanged(m_player.expenses());
     healthChanged(m_player.health());
     moneyChanged(m_player.money());
     ageChanged(m_player.age());
     jobChanged(m_player.job());
+
+    setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, size(),
+            qApp->desktop()->availableGeometry()));
 
     m_daysTimer->start(500);
 }
@@ -75,6 +82,8 @@ void MainWindow::ageChanged(const Model::Age &age) {
     const int v = age.days() - age.years() * 365ul;
 
     ageBar->setValue(v);
+
+    if(m_jobSearching) findJobBar->setValue(findJobBar->value() + 1);
 
     if(age.years() > 18u && !v) statusBar()->showMessage("Happy Birthday!", 2000);
 }
@@ -116,11 +125,39 @@ QString MainWindow::jobDescription(const Model::IJob *job) const {
 
 void MainWindow::findJob() {
 
-    Model::IJob * const job = Model::JobRegistry::instance().findJob(m_player);
+    findJobButton->setDisabled(true);
 
-    if(QMessageBox::question(this, "Job offer", QString("Job offer:<br /><b>%1</b>").
-                             arg(jobDescription(job)), QMessageBox::Yes, QMessageBox::No) ==
-            QMessageBox::Yes) m_player.setJob(job);
+    findJobBar->setValue(0);
+    findJobBar->setFormat("Finding job...");
+    findJobBar->setMaximum(Model::JobRegistry::instance().findJob(m_player));
+
+    QObject::connect(&Model::JobRegistry::instance(), SIGNAL(jobFound(Model::IJob*)),
+                     this, SLOT(jobFound(Model::IJob*)));
+
+    m_jobSearching = true;
+}
+
+void MainWindow::jobFound(Model::IJob *job) {
+
+    m_jobSearching = false;
+
+    if(job) findJobBar->setFormat("Got a job offer!");
+
+    QObject::disconnect(&Model::JobRegistry::instance(), SIGNAL(jobFound(Model::IJob*)),
+                        this, SLOT(jobFound(Model::IJob*)));
+
+    if(job && m_player.job() != job && (m_player.job()->payment().amount() == 0.0 ||
+                                        (QMessageBox::question(this, "Job offer",
+                                                              QString("Do you want to be a " \
+                                                                      "<br /><b>%1</b>?").
+                                                              arg(jobDescription(job)),
+                                                              QMessageBox::Yes, QMessageBox::No)
+                                        == QMessageBox::Yes))) m_player.setJob(job);
+
+    findJobBar->setValue(0);
+    findJobBar->setFormat(QString::null);
+
+    findJobButton->setDisabled(false);
 }
 
 void MainWindow::educationAvailable(const Model::IEducation *education) {
@@ -179,6 +216,15 @@ void MainWindow::setupNextEducation() {
 }
 
 QString MainWindow::eduButtonText(const Model::IEducation *edu) const {
-    return QString("%1 (%2 years, %3 %4)").arg(edu->name()).arg(edu->days() / 365ul).
+    return QString("&Go to %1 (%3 %4/%2 years)").arg(edu->name()).arg(edu->days() / 365ul).
             arg(QString::number(edu->cost(), 'f', 2)).arg(QString::fromUtf8("\u20AC"));
+}
+
+void MainWindow::healthCheck(qreal cost) {
+    if(QMessageBox::question(this, "Health check", QString("Do you want to get a<br />" \
+                                                           "health chack for %1 %2").
+                             arg(QString::number(cost, 'f', 2)).arg(QString::fromUtf8("\u20AC")),
+                             QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
+        m_player.doHealthCheck(cost);
+    }
 }

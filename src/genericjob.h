@@ -28,17 +28,20 @@ class GenericJob : public AbstractJob {
     Q_OBJECT
     Q_PROPERTY(QString name READ name)
     Q_PROPERTY(Money payment READ payment)
+    Q_PROPERTY(uint minLevel READ minLevel)
 
     friend class JobRegistry;
 
-public:
+public slots:
     virtual QString name() const;
+    virtual uint minLevel() const;
 
 protected:
-    explicit GenericJob(qreal payment, const QString &name, QObject *parent = 0L);
+    explicit GenericJob(qreal payment, const QString &name, uint minLevel, QObject *parent = 0L);
 
 private:
     QString m_name;
+    uint m_minLevel;
 };
 
 }

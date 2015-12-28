@@ -31,5 +31,9 @@ NullJob &NullJob::instance() {
 void NullJob::addQualitySample(int) {}
 
 QString NullJob::name() const {
-    return "Unemployed";
+    return QString("<i>%1</i>").arg("Unemployed");
+}
+
+uint NullJob::minLevel() const {
+    return 0u;
 }
