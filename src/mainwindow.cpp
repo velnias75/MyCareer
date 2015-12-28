@@ -116,7 +116,7 @@ QString MainWindow::jobDescription(const Model::IJob *job) const {
 
 void MainWindow::findJob() {
 
-    const Model::IJob * const job = Model::JobRegistry::instance().findJob(m_player);
+    Model::IJob * const job = Model::JobRegistry::instance().findJob(m_player);
 
     if(QMessageBox::question(this, "Job offer", QString("Job offer:<br /><b>%1</b>").
                              arg(jobDescription(job)), QMessageBox::Yes, QMessageBox::No) ==

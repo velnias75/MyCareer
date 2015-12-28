@@ -30,7 +30,8 @@ Player::Player(QObject *parent) : QObject(parent),
     m_job(JobRegistry::instance().createNullJob()), m_expenses(10.0), m_health(), m_age(),
     m_education(EducationRegistry::instance(*this).createNullEducation()) {
 
-    QObject::connect(&m_age, SIGNAL(yearsChanged(uint)), this, SLOT(yearsChanged(uint)));
+    QObject::connect(&m_age, SIGNAL(yearsChanged(uint)),
+                     this, SLOT(yearsChanged(uint)));
     QObject::connect(&m_health, SIGNAL(valueChanged(unsigned char)),
                      this, SLOT(healthValueChanged(unsigned char)));
     QObject::connect(&m_money, SIGNAL(amountChanged(qreal)),
@@ -57,6 +58,11 @@ Player &Player::operator=(const Player &o) {
 }
 
 void Player::yearsChanged(uint) {
+
+    if(!(m_age.days() % 365) && m_job->averageQuality() < 40) {
+        setJob(JobRegistry::instance().createNullJob());
+    }
+
     emit ageChanged(m_age);
 }
 
@@ -83,6 +89,8 @@ void Player::increaseDay() {
                                                     (m_money.amount() < 0.0 ? 2 : 1)));
 
     m_money.setAmount(m_money.amount() + m_job->payment().amount() - m_expenses.amount());
+
+    m_job->addQualitySample((m_health.value() * (10 + (qrand() % 90)))/100);
 }
 
 void Player::die() {
@@ -93,12 +101,16 @@ const Money &Player::money() const {
     return m_money;
 }
 
-const IJob *Player::job() const {
+IJob *Player::job() const {
     return m_job;
 }
 
-void Player::setJob(const IJob *job) {
+void Player::setJob(IJob *job) {
+
+    if(job != m_job) job->clearQuality();
+
     m_job = job;
+
     emit jobChanged(m_job);
 }
 

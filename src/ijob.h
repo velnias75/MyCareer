@@ -31,9 +31,14 @@ class IJob : public QObject {
 	Q_PROPERTY(QString name READ name)
 	Q_PROPERTY(Money payment READ payment)
 
-public:
+public slots:
 	virtual QString name() const = 0;
 	virtual const Money &payment() const = 0;
+	virtual void addQualitySample(int quality) = 0;
+
+public:
+	virtual int averageQuality() const = 0;
+	virtual void clearQuality() = 0;
 
 protected:
 	explicit inline IJob(QObject *parent = 0) : QObject(parent) {}

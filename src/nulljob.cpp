@@ -23,10 +23,12 @@ using namespace Model;
 
 NullJob::NullJob(QObject *parent) : AbstractJob(0.0, parent) {}
 
-const NullJob &NullJob::instance() {
+NullJob &NullJob::instance() {
     static NullJob inst;
     return inst;
 }
+
+void NullJob::addQualitySample(int) {}
 
 QString NullJob::name() const {
     return "Unemployed";

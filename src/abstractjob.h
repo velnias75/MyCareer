@@ -29,15 +29,21 @@ class AbstractJob : public IJob {
     Q_PROPERTY(QString name READ name)
     Q_PROPERTY(Money payment READ payment)
 
-public:
+public slots:
     virtual QString name() const = 0;
     virtual const Money &payment() const;
+    virtual void addQualitySample(int quality);
+
+public:
+    virtual int averageQuality() const;
+    virtual void clearQuality();
 
 protected:
     explicit AbstractJob(qreal payment, QObject *parent = 0L);
 
 private:
     Money m_payment;
+    QList<int> m_qualitySamples;
 };
 
 }

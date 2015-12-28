@@ -36,7 +36,7 @@ class Player : public QObject {
 
     Q_OBJECT
     Q_PROPERTY(Money money READ money NOTIFY moneyChanged)
-    Q_PROPERTY(const IJob* job WRITE setJob READ job NOTIFY jobChanged)
+    Q_PROPERTY(IJob* job WRITE setJob READ job NOTIFY jobChanged)
     Q_PROPERTY(Expenses expenses READ expenses NOTIFY expensesChanged)
     Q_PROPERTY(Health health READ health NOTIFY healthChanged)
     Q_PROPERTY(Age age READ age NOTIFY ageChanged)
@@ -68,8 +68,8 @@ public slots:
     const IEducation *education() const;
     void setEducation(const IEducation *IEducation);
 
-    const IJob *job() const;
-    void setJob(const IJob *job);
+    Model::IJob *job() const;
+    void setJob(Model::IJob *job);
 
 private slots:
     void die();
@@ -82,7 +82,7 @@ private slots:
 private:
     const qreal m_interestRate;
     Money m_money;
-    const IJob *m_job;
+    IJob *m_job;
     Expenses m_expenses;
     Health m_health;
     Age m_age;

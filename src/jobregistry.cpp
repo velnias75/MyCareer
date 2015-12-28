@@ -39,14 +39,14 @@ const JobRegistry &JobRegistry::instance() {
     return inst;
 }
 
-const IJob *JobRegistry::findJob(const Player &player) const {
+IJob *JobRegistry::findJob(const Player &player) const {
     return m_jobList.at(qrand() % m_jobList.size());
 }
 
-const IJob *JobRegistry::createNullJob() const {
+IJob *JobRegistry::createNullJob() const {
     return &NullJob::instance();
 }
 
-const IJob *JobRegistry::createGenericJob(const QString &name, qreal payment) const {
+IJob *JobRegistry::createGenericJob(const QString &name, qreal payment) const {
     return new GenericJob(payment, name);
 }

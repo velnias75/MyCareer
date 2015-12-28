@@ -30,10 +30,11 @@ class NullJob : public AbstractJob {
     Q_PROPERTY(Money payment READ payment)
 
 public:
+    static NullJob &instance();
 
-    static const NullJob &instance();
-
+public slots:
     virtual QString name() const;
+    virtual void addQualitySample(int quality);
 
 private:
     explicit NullJob(QObject *parent = 0L);

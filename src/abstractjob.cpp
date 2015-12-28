@@ -26,3 +26,22 @@ AbstractJob::AbstractJob(qreal payment, QObject *parent) : IJob(parent), m_payme
 const Money &AbstractJob::payment() const {
     return m_payment;
 }
+
+void AbstractJob::addQualitySample(int quality) {
+    m_qualitySamples.append(quality);
+}
+
+void AbstractJob::clearQuality() {
+    m_qualitySamples.clear();
+}
+
+int AbstractJob::averageQuality() const {
+
+    if(m_qualitySamples.isEmpty()) return 100;
+
+    int s = 0;
+
+    foreach (const int i, m_qualitySamples) s += i;
+
+    return s/m_qualitySamples.size();
+}

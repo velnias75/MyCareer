@@ -36,17 +36,17 @@ public:
 
     virtual ~JobRegistry();
 
-    const IJob *findJob(const Player &player) const;
+    IJob *findJob(const Player &player) const;
 
-    const IJob *createNullJob() const;
+    IJob *createNullJob() const;
 
 private:
     explicit JobRegistry(QObject *parent = 0);
 
-    const IJob *createGenericJob(const QString &name, qreal payment) const;
+    IJob *createGenericJob(const QString &name, qreal payment) const;
 
 private:
-    QList<const IJob *> m_jobList;
+    QList<IJob *> m_jobList;
 };
 
 }
