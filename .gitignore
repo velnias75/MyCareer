@@ -1,0 +1,8 @@
+CMakeFiles
+build
+CMakeCache.txt
+*.user
+Makefile
+*.cmake
+moc_*
+
