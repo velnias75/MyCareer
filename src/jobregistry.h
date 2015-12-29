@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QMap>
 
 namespace Model {
 
@@ -51,7 +52,7 @@ private:
     IJob *createGenericJob(const QString &name, qreal payment, uint minLevel) const;
 
 private:
-    QList<IJob *> m_jobList;
+    QMap<uint, QList<IJob *> > m_jobList;
     mutable ulong m_searchStartDay;
     mutable ulong m_searchDuration;
     mutable uint m_eduLevel;

@@ -27,19 +27,36 @@
 using namespace Model;
 
 JobRegistry::JobRegistry(QObject *parent) : QObject(parent), m_jobList() {
-    m_jobList.append(createGenericJob("Tree washer", 52.0, 0u));
-    m_jobList.append(createGenericJob("Rain drop counter", 57.0, 0u));
-    m_jobList.append(createGenericJob("Candle blower", 60.0, 0u));
-    m_jobList.append(createGenericJob("Repairer of soda cans", 85.0, 1u));
-    m_jobList.append(createGenericJob("Glass welder", 90.0, 1u));
-    m_jobList.append(createGenericJob("DVD rewinder", 100.0, 1u));
 
-    m_jobList.append(createGenericJob("Astronomer", 600.0, 2u));
-    m_jobList.append(createGenericJob("Transcendental adviser", 800.0, 2u));
+    QList<IJob *> jobs;
+
+    jobs.append(createGenericJob("Tree washer", 52.0, 0u));
+    jobs.append(createGenericJob("Ant tamer", 11.0, 0u));
+    jobs.append(createGenericJob("Rain drop counter", 57.0, 0u));
+    jobs.append(createGenericJob("Candle blower", 60.0, 0u));
+
+    m_jobList.insert(0u, jobs);
+    jobs.clear();
+
+    jobs.append(createGenericJob("Repairer of soda cans", 85.0, 1u));
+    jobs.append(createGenericJob("Tape rewinder", 20.0, 1u));
+    jobs.append(createGenericJob("Glass welder", 90.0, 1u));
+    jobs.append(createGenericJob("DVD rewinder", 100.0, 1u));
+
+    m_jobList.insert(1u, jobs);
+    jobs.clear();
+
+    jobs.append(createGenericJob("Astronomer", 600.0, 2u));
+    jobs.append(createGenericJob("Transcendental adviser", 800.0, 2u));
+
+    m_jobList.insert(2u, jobs);
 }
 
 JobRegistry::~JobRegistry() {
-    foreach (const IJob *j, m_jobList) delete j;
+
+    foreach (const QList<IJob *> &l, m_jobList) {
+        foreach(const IJob *j, l) delete j;
+    }
 }
 
 const JobRegistry &JobRegistry::instance() {
@@ -59,9 +76,13 @@ uchar JobRegistry::findJob(const Player &player) const {
 }
 
 void JobRegistry::searchDaysChanged(ulong d) {
+
     if(d >= m_searchStartDay + m_searchDuration) {
-        IJob *j = m_jobList.at(qrand() % m_jobList.size());
-        emit jobFound(j->minLevel() == m_eduLevel ? j : 0L);
+
+        QList<IJob *> jl(m_jobList[m_eduLevel]);
+        IJob *j = jl.at(qrand() % m_jobList.size());
+
+        emit jobFound(!(qrand() & 1) && j->minLevel() == m_eduLevel ? j : 0L);
     }
 }
 

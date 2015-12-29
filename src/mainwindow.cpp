@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), m_player(),
 
     QObject::connect(action_Find_Job, SIGNAL(activated()), this, SLOT(findJob()));
     QObject::connect(findJobButton, SIGNAL(clicked()), this, SLOT(findJob()));
+    QObject::connect(eduButton, SIGNAL(clicked()), this, SLOT(doNextEducation()));
 
     QObject::connect(m_daysTimer, SIGNAL(timeout()), &m_player, SLOT(increaseDay()));
 
@@ -205,6 +206,9 @@ void MainWindow::setupNextEducation() {
 
     eduBar->setEnabled(false);
 
+    QObject::disconnect(m_nextEducation, SIGNAL(available(const Model::IEducation*)),
+                     this, SLOT(educationAvailable(const Model::IEducation*)));
+
     m_nextEducation = Model::EducationRegistry::instance(m_player).nextEducation();
 
     eduButton->setText(eduButtonText(m_nextEducation));
@@ -212,7 +216,6 @@ void MainWindow::setupNextEducation() {
 
     QObject::connect(m_nextEducation, SIGNAL(available(const Model::IEducation*)),
                      this, SLOT(educationAvailable(const Model::IEducation*)));
-    QObject::connect(eduButton, SIGNAL(clicked()), this, SLOT(doNextEducation()));
 }
 
 QString MainWindow::eduButtonText(const Model::IEducation *edu) const {
